@@ -14,7 +14,7 @@ GARBAGE_COLLECTION_TIME = TIME_OUT / 3 * 2
 
 
 class Entry(object):
-    """entry"""
+    """entry class"""
     def __init__(self, dest_node, first_node, metric, ti=None, flag=True):
         self.dest_node = dest_node  # destination router id
         self.first_node = first_node  # the first router id to destination
@@ -102,8 +102,6 @@ class Router(object):
         my_socket = None
         try:
             my_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            # my_socket.bind((LOCALHOST, port_no))
-            # print("Create socket on port " + str(port_no))
             return my_socket
         except socket.error as e:
             print(e.strerror)
@@ -120,13 +118,9 @@ class Router(object):
             my_socket = self.create_socket(port_no)
             self.input_sockets.append(my_socket)
         if len(self.input_sockets) != 0:
-            self.output_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            self.output_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            self.input_sockets[0].setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            # self.output_socket.bind((LOCALHOST, self.inputs[0]))
             for i in range(len(self.input_sockets)):
                 self.input_sockets[i].bind((LOCALHOST, self.inputs[i]))
-            print(self.input_sockets)
+            self.output_socket = self.input_sockets[0]
 
     def create_update_packet(self, output):
         """create an update packet
@@ -192,7 +186,6 @@ class Router(object):
             output = self.outputs.get(source_node)
             dest_node = bin_to_dec(body[i * 5 + 1])
             metric = bin_to_dec(body[i * 5 + 4])
-            print(str(dest_node) + ", " + str(self.id))
             if dest_node != self.id:
                 new_metric = metric + output.metric
                 if new_metric > INFINITY:
