@@ -4,3 +4,8 @@
 - for Linux: python3 rip_v2.py router1.txt
 
 ## Note: do not just copy & paste the code for your assignment, think first and improve then. Thanks.
+
+## PS: So sad about mark of assignment. Some parts need to be fixed.
+- entries should not be prepopulated in entrytable by configure file.
+- metric need to be checked before processing
+- forget to check port # range
